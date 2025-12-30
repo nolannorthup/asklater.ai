@@ -22,13 +22,12 @@ Simply forward or send any content you want to save to this address from any dev
 ## Safeguards
 
 ### Sender Whitelist
-Only process emails from these authorized senders:
-- `nolan.northup@sierra-cedar.com`
-- `nolannorthup@gmail.com`
-- `admin@upnorthdigital.ai`
-- `nolannorthup@upnorthdigital.ai`
+Only process emails from authorized senders defined in `.env`:
+```
+ASKLATER_WHITELIST=email1@example.com,email2@example.com
+```
 
-Emails from other senders will be skipped with a warning in the audit log.
+Emails from senders not in the whitelist will be skipped with a warning in the audit log.
 
 ### Duplicate Prevention
 - Check `content/` for existing files with the same source URL
