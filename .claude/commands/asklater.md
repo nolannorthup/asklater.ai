@@ -1,6 +1,6 @@
 # /asklater - Save now. Ask Claude later.
 
-Process new emails from Gmail and route content through adaptive AI processing pipeline.
+Process new emails sent to `asklater@upnorthdigital.ai` and route content through adaptive AI processing pipeline.
 
 ## Usage
 
@@ -9,16 +9,22 @@ Process new emails from Gmail and route content through adaptive AI processing p
 ```
 
 **Options:**
-- `--limit N` - Process only N most recent unread emails (default: 10)
+- `--limit N` - Process only N most recent emails (default: 10)
 - `--dry-run` - Show what would be processed without executing
 - `--depth minimal|standard|comprehensive` - Force specific processing depth
+- `--all` - Check all recent emails, not just those to the asklater alias
+
+## Email Alias
+
+By default, this command searches for emails sent to `to:asklater@upnorthdigital.ai`.
+Simply forward or send any content you want to save to this address from any device.
 
 ## How It Works
 
 This command implements the AskLater Content Processing System (PRD-002):
 
 ### Phase 1: Intake (Assessment)
-1. Fetch unread emails from Gmail via `gmail-mcp`
+1. Fetch emails to asklater alias via Gmail OAuth MCP (`to:asklater@upnorthdigital.ai`)
 2. Detect content type (TikTok, YouTube, Article, RSS)
 3. Assess complexity to determine processing depth
 
@@ -51,7 +57,7 @@ This command implements the AskLater Content Processing System (PRD-002):
 
 ## MCP Tools Used
 
-- `gmail-mcp`: listMessages, getMessage
+- `gmail-oauth`: search_emails, read_email (OAuth-based, full body access)
 - `youtube_transcript`: get_transcript, get_video_info
 - `markdownify`: webpage-to-markdown
 - `apify-mcp-server`: call-actor (TikTok scrapers)
@@ -82,15 +88,16 @@ Updated _index.md and _recent.md.
 
 When this command is invoked, Claude Code will:
 
-1. **Activate MCP tools** needed for processing
-2. **Fetch emails** using gmail-mcp listMessages
-3. **For each email with URLs:**
+1. **Search emails** using `to:asklater@upnorthdigital.ai newer_than:7d`
+2. **For each email with URLs:**
+   - Read full email body via Gmail OAuth MCP
+   - Extract URLs from email content
    - Detect content type from URL patterns
    - Assess complexity based on content characteristics
    - Spawn Task agent for that content type
    - Process and generate markdown
-4. **Batch commit** all processed files to GitHub
-5. **Update indexes** and audit log
+3. **Batch commit** all processed files to GitHub
+4. **Update indexes** and audit log
 
 ## Implementation Notes
 
