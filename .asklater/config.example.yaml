@@ -1,0 +1,123 @@
+# AskLater Configuration
+# Copy this file to config.yaml and customize with your values
+# config.yaml is gitignored - your settings stay private
+
+# =============================================================================
+# EMAIL SETTINGS
+# =============================================================================
+email:
+  # Email alias to monitor for content (e.g., asklater@yourdomain.com)
+  alias: asklater@yourdomain.com
+
+  # Authorized senders - only process emails from these addresses
+  whitelist:
+    - your-email@example.com
+    - your-other-email@example.com
+
+  # How far back to check for emails (in days)
+  check_interval_days: 7
+
+# =============================================================================
+# PROCESSING LIMITS
+# =============================================================================
+limits:
+  # Maximum emails to process per /asklater run
+  emails_per_run: 10
+
+  # Skip videos longer than this (in minutes)
+  max_video_minutes: 60
+
+  # Skip articles longer than this (word count)
+  max_article_words: 10000
+
+  # Maximum emails to process per day (resets at midnight)
+  max_daily_emails: 25
+
+  # Minimum minutes between /asklater runs
+  cooldown_minutes: 5
+
+# =============================================================================
+# CONTENT RULES
+# =============================================================================
+content:
+  # Allowed domains - leave empty to allow all domains
+  # If specified, ONLY these domains will be processed
+  allowed_domains: []
+  #  - youtube.com
+  #  - tiktok.com
+  #  - medium.com
+
+  # Blocked domains - these will never be processed
+  blocked_domains:
+    - bit.ly
+    - tinyurl.com
+    - t.co
+    - goo.gl
+    - ow.ly
+    - buff.ly
+    - is.gd
+    - shorte.st
+
+  # URL patterns to skip (regex)
+  skip_patterns:
+    - "\\.exe$"
+    - "\\.zip$"
+    - "\\.rar$"
+    - "\\.7z$"
+    - "\\.sh$"
+    - "\\.bat$"
+    - "\\.msi$"
+    - "\\.dmg$"
+    - "\\.pkg$"
+    - "\\.deb$"
+    - "\\.rpm$"
+
+# =============================================================================
+# SECURITY SETTINGS
+# =============================================================================
+security:
+  # Require HTTPS for all URLs (block HTTP)
+  require_https: true
+
+  # Never process email attachments
+  block_attachments: true
+
+  # Log all skipped items with reason to audit.md
+  log_skipped: true
+
+  # Default to dry-run mode (require --execute to actually process)
+  dry_run_default: false
+
+  # Maximum URL redirects to follow
+  max_redirects: 3
+
+  # Block URLs with query strings longer than this
+  max_query_length: 500
+
+# =============================================================================
+# OUTPUT SETTINGS
+# =============================================================================
+output:
+  # GitHub repository for content storage
+  repo: owner/repo-name
+
+  # Branch to commit to
+  branch: main
+
+  # Prefix for commit messages
+  commit_message_prefix: "content:"
+
+  # Auto-update index files after processing
+  update_indexes: true
+
+# =============================================================================
+# DEPTH OVERRIDES
+# =============================================================================
+# Override automatic depth detection for specific domains
+depth_overrides:
+  # Example: always use comprehensive for technical sites
+  # news.ycombinator.com: comprehensive
+  # arxiv.org: comprehensive
+  # Example: always use minimal for social media
+  # twitter.com: minimal
+  # x.com: minimal

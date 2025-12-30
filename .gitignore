@@ -22,3 +22,7 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+
+# AskLater private config (contains email whitelist)
+.asklater/config.yaml
+!.asklater/config.example.yaml

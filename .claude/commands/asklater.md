@@ -1,6 +1,6 @@
 # /asklater - Save now. Ask Claude later.
 
-Process new emails sent to `asklater@upnorthdigital.ai` and route content through adaptive AI processing pipeline.
+Process new emails and route content through adaptive AI processing pipeline with security controls.
 
 ## Usage
 
@@ -9,53 +9,78 @@ Process new emails sent to `asklater@upnorthdigital.ai` and route content throug
 ```
 
 **Options:**
-- `--limit N` - Process only N most recent emails (default: 10)
+- `--limit N` - Process only N most recent emails (default from config)
 - `--dry-run` - Show what would be processed without executing
+- `--execute` - Actually process and commit (required if dry_run_default is true)
 - `--depth minimal|standard|comprehensive` - Force specific processing depth
 - `--all` - Check all recent emails, not just those to the asklater alias
 
-## Email Alias
+## Configuration
 
-By default, this command searches for emails sent to `to:asklater@upnorthdigital.ai`.
-Simply forward or send any content you want to save to this address from any device.
+All settings are in `.asklater/config.yaml`. Copy from `config.example.yaml` to get started.
 
-## Safeguards
+```yaml
+email:
+  alias: asklater@yourdomain.com
+  whitelist:
+    - your-email@example.com
+  check_interval_days: 7
+
+limits:
+  emails_per_run: 10
+  max_video_minutes: 60
+  max_article_words: 10000
+
+security:
+  require_https: true
+  block_attachments: true
+```
+
+See `config.example.yaml` for full documentation of all options.
+
+## Security Controls
 
 ### Sender Whitelist
-Only process emails from authorized senders defined in `.env`:
-```
-ASKLATER_WHITELIST=email1@example.com,email2@example.com
-```
+Only process emails from addresses listed in `config.yaml → email.whitelist`.
+Emails from unknown senders are logged and skipped.
 
-Emails from senders not in the whitelist will be skipped with a warning in the audit log.
+### URL Validation
+- **HTTPS Required**: HTTP links are blocked (configurable)
+- **Domain Blocklist**: URL shorteners blocked by default (bit.ly, t.co, etc.)
+- **File Type Blocklist**: Executable files skipped (.exe, .zip, .sh, etc.)
+- **Query String Limit**: Overly long query strings rejected
+
+### Rate Limiting
+- **Per-run limit**: Configurable max emails per `/asklater` invocation
+- **Daily limit**: Max emails processed per day
+- **Cooldown**: Minimum time between runs
 
 ### Duplicate Prevention
-- Check `content/` for existing files with the same source URL
-- Skip already-processed content to avoid duplicates
+Processed URLs tracked in `.asklater/processed-urls.txt` to prevent reprocessing.
 
-### Processing Limits
-- Default limit: 10 emails per run
-- Skip videos longer than 60 minutes
-- Skip articles longer than 10,000 words
+### Attachment Blocking
+Email attachments are never processed (security risk).
 
 ## How It Works
 
-This command implements the AskLater Content Processing System (PRD-002):
-
 ### Phase 1: Intake (Assessment)
-1. Fetch emails to asklater alias via Gmail OAuth MCP (`to:asklater@upnorthdigital.ai`)
-2. Detect content type (TikTok, YouTube, Article, RSS)
-3. Assess complexity to determine processing depth
+1. Load config from `.asklater/config.yaml`
+2. Fetch emails via Gmail OAuth MCP using configured alias
+3. Validate sender against whitelist
+4. Validate URLs against security rules
+5. Check for duplicates in `processed-urls.txt`
+6. Detect content type and assess complexity
 
 ### Phase 2: Processing (Sub-Agents)
-4. Spawn appropriate processor agent based on content type
-5. Extract content using MCP tools (youtube_transcript, markdownify, apify)
-6. Generate markdown with depth-appropriate detail
+7. Spawn appropriate processor agent based on content type
+8. Extract content using MCP tools
+9. Generate markdown with depth-appropriate detail
 
 ### Phase 3: Commit (Operations)
-7. Push markdown files to GitHub via `github` MCP
-8. Update index files (_index.md, _recent.md)
-9. Log processing to .asklater/audit.md
+10. Push markdown files to GitHub
+11. Update `processed-urls.txt` with new entries
+12. Update index files (_index.md)
+13. Log all activity to `.asklater/audit.md`
 
 ## Content Type Detection
 
@@ -74,6 +99,8 @@ This command implements the AskLater Content Processing System (PRD-002):
 | **Standard** | 1-10min video, 500-2000 words | Full summary + entities |
 | **Comprehensive** | >10min video, >2000 words, technical | Deep analysis + WebSearch |
 
+Depth can be overridden per-domain in `config.yaml → depth_overrides`.
+
 ## MCP Tools Used
 
 - `gmail-oauth`: search_emails, read_email (OAuth-based, full body access)
@@ -85,38 +112,50 @@ This command implements the AskLater Content Processing System (PRD-002):
 ## Example Output
 
 ```
-AskLater processing 3 new emails...
+Loading config from .asklater/config.yaml...
 
-[1/3] TikTok: "AI coding tips"
-      Depth: Minimal (45s video)
-      -> content/tiktok/2025/12/20251229-182301-ai-coding-tips.md
+Security checks:
+  ✓ Sender whitelist: 4 addresses
+  ✓ Blocked domains: 8 patterns
+  ✓ HTTPS required: enabled
+  ✓ Attachments: blocked
 
-[2/3] YouTube: "Building LLM Agents"
+Searching for emails to asklater@upnorthdigital.ai (last 7 days)...
+Found 3 emails to process.
+
+[1/3] From: nolannorthup@gmail.com
+      URL: https://youtube.com/watch?v=abc123
+      Type: YouTube
+      ✓ Sender whitelisted
+      ✓ URL validated
+      ✓ Not a duplicate
       Depth: Comprehensive (45min, technical)
-      -> content/youtube/2025/12/20251229-182315-building-llm-agents.md
+      -> content/youtube/2025/12/building-llm-agents.md
 
-[3/3] Article: "The State of AI 2025"
-      Depth: Standard (1500 words)
-      -> content/articles/2025/12/20251229-182330-state-of-ai-2025.md
+[2/3] From: admin@upnorthdigital.ai
+      URL: http://example.com/article
+      ✗ SKIPPED: HTTP not allowed (HTTPS required)
+      Logged to audit.md
 
-Committed 3 files to GitHub.
-Updated _index.md and _recent.md.
+[3/3] From: spam@unknown.com
+      ✗ SKIPPED: Sender not in whitelist
+      Logged to audit.md
+
+Processed: 1 | Skipped: 2
+Committed 1 file to GitHub.
+Updated processed-urls.txt and _index.md.
 ```
 
-## Execution
+## State Files
 
-When this command is invoked, Claude Code will:
-
-1. **Search emails** using `to:asklater@upnorthdigital.ai newer_than:7d`
-2. **For each email with URLs:**
-   - Read full email body via Gmail OAuth MCP
-   - Extract URLs from email content
-   - Detect content type from URL patterns
-   - Assess complexity based on content characteristics
-   - Spawn Task agent for that content type
-   - Process and generate markdown
-3. **Batch commit** all processed files to GitHub
-4. **Update indexes** and audit log
+```
+.asklater/
+├── config.yaml         # Your private configuration
+├── config.example.yaml # Template (committed to git)
+├── processed-urls.txt  # Duplicate tracking
+├── audit.md            # Processing log
+└── processing-state.md # Current run state
+```
 
 ## Implementation Notes
 
