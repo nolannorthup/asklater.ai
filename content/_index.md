@@ -5,7 +5,7 @@ Last updated: 2025-12-30
 ## By Source Type
 
 ### TikTok
-_No content yet_
+- [Docker MCP Server: Reduce Context Window Flooding](tiktok/2025/12/docker-mcp-server-context-window.md)
 
 ### YouTube
 _No content yet_
@@ -20,4 +20,5 @@ _No content yet_
 
 | Date | Type | Title | Depth |
 |------|------|-------|-------|
+| 2025-12-30 | TikTok | [Docker MCP Server](tiktok/2025/12/docker-mcp-server-context-window.md) | Standard |
 | 2025-12-30 | Article | [Claude Code Update](articles/2025/12/claude-code-update-dec-2025.md) | Standard |
