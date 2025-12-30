@@ -19,6 +19,26 @@ Process new emails sent to `asklater@upnorthdigital.ai` and route content throug
 By default, this command searches for emails sent to `to:asklater@upnorthdigital.ai`.
 Simply forward or send any content you want to save to this address from any device.
 
+## Safeguards
+
+### Sender Whitelist
+Only process emails from these authorized senders:
+- `nolan.northup@sierra-cedar.com`
+- `nolannorthup@gmail.com`
+- `admin@upnorthdigital.ai`
+- `nolannorthup@upnorthdigital.ai`
+
+Emails from other senders will be skipped with a warning in the audit log.
+
+### Duplicate Prevention
+- Check `content/` for existing files with the same source URL
+- Skip already-processed content to avoid duplicates
+
+### Processing Limits
+- Default limit: 10 emails per run
+- Skip videos longer than 60 minutes
+- Skip articles longer than 10,000 words
+
 ## How It Works
 
 This command implements the AskLater Content Processing System (PRD-002):
