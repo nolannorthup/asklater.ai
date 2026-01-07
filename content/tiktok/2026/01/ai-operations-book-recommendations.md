@@ -1,5 +1,5 @@
 ---
-title: "35 Books for AI Operations: What to Read"
+title: "5 Business Books for AI Operations Fundamentals"
 source: tiktok
 source_url: https://www.tiktok.com/@the.rachelwoods/video/7578611422842637581
 date: 2025-11-30
@@ -7,30 +7,54 @@ author: Rachel Woods (@the.rachelwoods)
 duration: 132
 topics:
   - AI Operations
-  - Business
-  - Learning Resources
+  - Business Books
+  - Leadership
+  - Scaling
 tags:
   - ai-operations
   - books
-  - learning
-  - entrepreneur
+  - business-fundamentals
+  - scaling
+  - okrs
+  - eos
 depth: standard
 ---
 
 ## TLDR
 
-Rachel Woods read over 35 books this year on AI operations and has recommendations for anyone looking to learn about running an AI-first business.
+Rachel Woods recommends 5 foundational business books for anyone getting into AI operations - covering goal-setting, leadership, organizational systems, and scaling strategies.
 
 ## Key Points
 
-- 35+ books read on AI operations in one year
-- Building a business AI-first requires continuous learning
-- Book recommendations available for different AI operations topics
-- Focus on practical AI implementation for business
+- Business fundamentals are essential before diving into AI-specific operations
+- These books cover the operational backbone needed to scale an AI-first company
+- Focus areas: OKRs, leadership, organizational systems (EOS), and scaling frameworks
+
+## The 5 Books
+
+1. **Radical Focus** by Christina Wodtke
+   - Introduces OKRs (Objectives and Key Results)
+   - Essential for goal-setting and team alignment
+
+2. **The Great CEO Within** by Matt Mochary
+   - Guide to startup leadership and scaling
+   - Practical frameworks for running a growing company
+
+3. **Traction** by Gino Wickman
+   - Introduces EOS (Entrepreneurial Operating System)
+   - Organizational structure, accountability charts, and meeting rhythms
+
+4. **Scalable** by Ryan Deiss
+   - Operating system for running and scaling a business
+   - How to build systems that work without you
+
+5. **Scaling Up** by Verne Harnish
+   - Classic framework for growing businesses
+   - Covers people, strategy, execution, and cash
 
 ## Summary
 
-Rachel Woods, a second-time founder building an AI-first business, shares that she read over 35 books on AI operations this year. She offers to provide book recommendations based on what specific area of AI operations you're trying to learn. This reflects the depth of knowledge required to effectively implement AI in business operations.
+Rachel Woods, founder of The AI Exchange and former Meta data scientist, shares 5 essential business books for anyone learning AI operations. Rather than jumping straight into AI-specific content, she emphasizes mastering business fundamentals first. These books provide the operational infrastructure needed to successfully implement and scale AI in a business context - from setting goals (OKRs) to building organizational systems (EOS) to scaling strategies.
 
 ## Source
 
